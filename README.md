@@ -1,6 +1,6 @@
 # NoParticles
 
-Allows you to disable note/bomb cut particles
+Allows you to disable note/bomb cut particles and dust particles in menu.
 
 Thanks to [AllyPallyUK](https://github.com/AllyPallyUK/NoParticles/) for letting me update this mod.
 

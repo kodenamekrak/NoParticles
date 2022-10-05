@@ -3,7 +3,7 @@
   "name": "NoParticles",
   "id": "NoParticles",
   "author": "AllyPallyUK, updated by KodenameKRAK",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "packageId": "com.beatgames.beatsaber",
   "packageVersion": "1.24.0",
   "description": "Allows you to disable note/bomb cut particles",

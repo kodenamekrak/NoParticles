@@ -7,9 +7,15 @@
 #include "GlobalNamespace/NoteCutParticlesEffect.hpp"
 #include "GlobalNamespace/BombExplosionEffect.hpp"
 
+#include "UnityEngine/SceneManagement/SceneManager.hpp"
+#include "UnityEngine/ParticleSystem.hpp"
+#include "UnityEngine/Resources.hpp"
+#include "UnityEngine/Shader.hpp"
+
 DEFINE_CONFIG(ModConfig);
 
 using namespace GlobalNamespace;
+
 
 static ModInfo modInfo; // Stores the ID and version of our mod, and is sent to the modloader upon startup
 
@@ -27,6 +33,21 @@ Logger &getLogger()
 {
     static Logger *logger = new Logger(modInfo);
     return *logger;
+}
+
+MAKE_HOOK_MATCH(SceneManager_Internal_ActiveSceneChanged, &UnityEngine::SceneManagement::SceneManager::Internal_ActiveSceneChanged, void, UnityEngine::SceneManagement::Scene previousActiveScene, UnityEngine::SceneManagement::Scene newActiveScene)
+{
+    SceneManager_Internal_ActiveSceneChanged(previousActiveScene, newActiveScene);
+
+    if(getModConfig().DisableDust.GetValue())
+        for (auto Particle : UnityEngine::Resources::FindObjectsOfTypeAll<UnityEngine::ParticleSystem *>())
+        {
+            if(Particle->get_name() == "DustPS")
+            {
+                Particle->get_gameObject()->SetActive(false);
+                break;
+            }
+        }
 }
 
 MAKE_HOOK_MATCH(NoteCutParticlesEffect_SpawnParticles, &NoteCutParticlesEffect::SpawnParticles, void, NoteCutParticlesEffect *self, UnityEngine::Vector3 cutPoint, UnityEngine::Vector3 cutNormal, UnityEngine::Vector3 saberDir, float saberSpeed, UnityEngine::Vector3 noteMovementVec, UnityEngine::Color32 color, int sparkleParticlesCount, int explosionParticlesCount, float lifetimeMultiplier)
@@ -73,5 +94,6 @@ extern "C" void load()
     getLogger().info("Installing hooks...");
     INSTALL_HOOK(getLogger(), NoteCutParticlesEffect_SpawnParticles);
     INSTALL_HOOK(getLogger(), BombExplosionEffect_SpawnExplosion);
+    INSTALL_HOOK(getLogger(), SceneManager_Internal_ActiveSceneChanged);
     getLogger().info("Installed all hooks!");
 }
