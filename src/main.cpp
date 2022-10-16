@@ -45,7 +45,6 @@ MAKE_HOOK_MATCH(SceneManager_Internal_ActiveSceneChanged, &UnityEngine::SceneMan
             if(Particle->get_name() == "DustPS")
             {
                 Particle->get_gameObject()->SetActive(false);
-                break;
             }
         }
 }
