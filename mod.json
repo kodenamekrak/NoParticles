@@ -3,16 +3,16 @@
   "name": "NoParticles",
   "id": "NoParticles",
   "author": "AllyPallyUK, updated by KodenameKRAK",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "packageId": "com.beatgames.beatsaber",
   "packageVersion": "1.25.1",
+  "description": "Allows you to disable various particles throughout the game",
   "coverImage": "cover.png",
-  "description": "Allows you to disable note/bomb cut particles",
   "dependencies": [
     {
       "version": "^0.15.21",
       "id": "custom-types",
-      "downloadIfMissing": "https://github.com/sc2ad/Il2CppQuestTypePatching/releases/download/v0.15.21/CustomTypes.qmod"
+      "downloadIfMissing": "https://github.com/sc2ad/Il2CppQuestTypePatching/releases/download/v0.15.22/CustomTypes.qmod"
     },
     {
       "version": "^0.28.0",
@@ -22,7 +22,7 @@
     {
       "version": "^0.17.3",
       "id": "questui",
-      "downloadIfMissing": "https://github.com/darknight1050/QuestUI/releases/download/v0.17.3/QuestUI.qmod"
+      "downloadIfMissing": "https://github.com/darknight1050/QuestUI/releases/download/v0.17.5/QuestUI.qmod"
     }
   ],
   "modFiles": [

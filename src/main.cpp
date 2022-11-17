@@ -1,16 +1,15 @@
 #include "main.hpp"
-#include "config-utils/shared/config-utils.hpp"
 #include "questui/shared/QuestUI.hpp"
 #include "SettingsViewController.hpp"
 #include "ModConfig.hpp"
 
 #include "GlobalNamespace/NoteCutParticlesEffect.hpp"
 #include "GlobalNamespace/BombExplosionEffect.hpp"
+#include "GlobalNamespace/SaberClashEffect.hpp"
 
 #include "UnityEngine/SceneManagement/SceneManager.hpp"
 #include "UnityEngine/ParticleSystem.hpp"
 #include "UnityEngine/Resources.hpp"
-#include "UnityEngine/Shader.hpp"
 
 DEFINE_CONFIG(ModConfig);
 
@@ -35,18 +34,34 @@ Logger &getLogger()
     return *logger;
 }
 
-MAKE_HOOK_MATCH(SceneManager_Internal_ActiveSceneChanged, &UnityEngine::SceneManagement::SceneManager::Internal_ActiveSceneChanged, void, UnityEngine::SceneManagement::Scene previousActiveScene, UnityEngine::SceneManagement::Scene newActiveScene)
+MAKE_HOOK_MATCH(SceneManager_SetActiveScene, &UnityEngine::SceneManagement::SceneManager::SetActiveScene, bool, UnityEngine::SceneManagement::Scene newActiveScene)
 {
-    SceneManager_Internal_ActiveSceneChanged(previousActiveScene, newActiveScene);
+    bool result = SceneManager_SetActiveScene(newActiveScene);
 
-    if(getModConfig().DisableDust.GetValue())
-        for (auto Particle : UnityEngine::Resources::FindObjectsOfTypeAll<UnityEngine::ParticleSystem *>())
+    std::string sceneName = newActiveScene.get_name();
+
+    if((sceneName == "MainMenu" && getModConfig().DisableMenuDust.GetValue()) || (sceneName == "GameCore" && getModConfig().DisableSongDust.GetValue()))
+    {
+        for (auto particle : UnityEngine::Resources::FindObjectsOfTypeAll<UnityEngine::ParticleSystem *>())
         {
-            if(Particle->get_name() == "DustPS")
+            if(particle->get_name() == "DustPS")
             {
-                Particle->get_gameObject()->SetActive(false);
+                particle->get_gameObject()->SetActive(false);
             }
         }
+    }
+    
+    return result;
+}
+
+MAKE_HOOK_MATCH(SaberClashEffect_LateUpdate, &SaberClashEffect::LateUpdate, void, SaberClashEffect *self)
+{
+    if(getModConfig().DisableSaberClash.GetValue())
+    {
+        self->sparkleParticleSystem->get_gameObject()->SetActive(false);
+        self->glowParticleSystem->get_gameObject()->SetActive(false);
+    }
+    SaberClashEffect_LateUpdate(self); 
 }
 
 MAKE_HOOK_MATCH(NoteCutParticlesEffect_SpawnParticles, &NoteCutParticlesEffect::SpawnParticles, void, NoteCutParticlesEffect *self, UnityEngine::Vector3 cutPoint, UnityEngine::Vector3 cutNormal, UnityEngine::Vector3 saberDir, float saberSpeed, UnityEngine::Vector3 noteMovementVec, UnityEngine::Color32 color, int sparkleParticlesCount, int explosionParticlesCount, float lifetimeMultiplier)
@@ -93,6 +108,7 @@ extern "C" void load()
     getLogger().info("Installing hooks...");
     INSTALL_HOOK(getLogger(), NoteCutParticlesEffect_SpawnParticles);
     INSTALL_HOOK(getLogger(), BombExplosionEffect_SpawnExplosion);
-    INSTALL_HOOK(getLogger(), SceneManager_Internal_ActiveSceneChanged);
+    INSTALL_HOOK(getLogger(), SceneManager_SetActiveScene);
+    INSTALL_HOOK(getLogger(), SaberClashEffect_LateUpdate);
     getLogger().info("Installed all hooks!");
 }
