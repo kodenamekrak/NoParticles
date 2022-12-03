@@ -11,15 +11,11 @@
 #include "UnityEngine/ParticleSystem.hpp"
 #include "UnityEngine/Resources.hpp"
 
-DEFINE_CONFIG(ModConfig);
-
 using namespace GlobalNamespace;
 
 
-static ModInfo modInfo; // Stores the ID and version of our mod, and is sent to the modloader upon startup
+static ModInfo modInfo;
 
-// Loads the config from disk using our modInfo, then returns it for use
-// other config tools such as config-utils don't use this config, so it can be removed if those are in use
 Configuration &getConfig()
 {
     static Configuration config(modInfo);
@@ -54,7 +50,7 @@ MAKE_HOOK_MATCH(SceneManager_SetActiveScene, &UnityEngine::SceneManagement::Scen
     return result;
 }
 
-MAKE_HOOK_MATCH(SaberClashEffect_LateUpdate, &SaberClashEffect::LateUpdate, void, SaberClashEffect *self)
+MAKE_HOOK_MATCH(SaberClashEffect_LateUpdate, &SaberClashEffect::Start, void, SaberClashEffect *self)
 {
     if(getModConfig().DisableSaberClash.GetValue())
     {
