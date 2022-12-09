@@ -1,0 +1,16 @@
+{
+  "_QPVersion": "0.1.1",
+  "name": "NoParticles",
+  "id": "NoParticles",
+  "author": "AllyPallyUK, KodenameKRAK",
+  "version": "0.1.6",
+  "packageId": "com.beatgames.beatsaber",
+  "packageVersion": "1.26.1",
+  "description": "Allows you to disable various particles throughout the game",
+  "coverImage": "cover.png",
+  "dependencies": [],
+  "modFiles": [],
+  "libraryFiles": [],
+  "fileCopies": [],
+  "copyExtensions": []
+}
