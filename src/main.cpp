@@ -13,7 +13,6 @@
 
 using namespace GlobalNamespace;
 
-
 static ModInfo modInfo;
 
 Configuration &getConfig()
@@ -50,14 +49,14 @@ MAKE_HOOK_MATCH(SceneManager_SetActiveScene, &UnityEngine::SceneManagement::Scen
     return result;
 }
 
-MAKE_HOOK_MATCH(SaberClashEffect_LateUpdate, &SaberClashEffect::Start, void, SaberClashEffect *self)
+MAKE_HOOK_MATCH(SaberClashEffect_Start, &SaberClashEffect::Start, void, SaberClashEffect *self)
 {
     if(getModConfig().DisableSaberClash.GetValue())
     {
         self->sparkleParticleSystem->get_gameObject()->SetActive(false);
         self->glowParticleSystem->get_gameObject()->SetActive(false);
     }
-    SaberClashEffect_LateUpdate(self); 
+    SaberClashEffect_Start(self); 
 }
 
 MAKE_HOOK_MATCH(NoteCutParticlesEffect_SpawnParticles, &NoteCutParticlesEffect::SpawnParticles, void, NoteCutParticlesEffect *self, UnityEngine::Vector3 cutPoint, UnityEngine::Vector3 cutNormal, UnityEngine::Vector3 saberDir, float saberSpeed, UnityEngine::Vector3 noteMovementVec, UnityEngine::Color32 color, int sparkleParticlesCount, int explosionParticlesCount, float lifetimeMultiplier)
@@ -105,6 +104,6 @@ extern "C" void load()
     INSTALL_HOOK(getLogger(), NoteCutParticlesEffect_SpawnParticles);
     INSTALL_HOOK(getLogger(), BombExplosionEffect_SpawnExplosion);
     INSTALL_HOOK(getLogger(), SceneManager_SetActiveScene);
-    INSTALL_HOOK(getLogger(), SaberClashEffect_LateUpdate);
+    INSTALL_HOOK(getLogger(), SaberClashEffect_Start);
     getLogger().info("Installed all hooks!");
 }
