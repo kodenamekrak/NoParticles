@@ -3,7 +3,7 @@
 name: NDK build
 
 env:
-    module_id: noparticles
+    module_id: NoParticles
     qmodName: NoParticles
 
 on:
