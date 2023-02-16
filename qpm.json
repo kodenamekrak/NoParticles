@@ -3,11 +3,11 @@
   "dependenciesDir": "extern",
   "info": {
     "name": "NoParticles",
-    "id": "NoParticles",
+    "id": "noparticles",
     "version": "0.1.4",
     "url": null,
     "additionalData": {
-      "overrideSoName": "libNoParticles.so"
+      "overrideSoName": "libnoparticles.so"
     }
   },
   "dependencies": [
