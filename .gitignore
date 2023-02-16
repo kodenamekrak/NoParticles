@@ -1,0 +1,6 @@
+extern
+build
+
+extern.cmake
+qpm_defines.cmake
+qpm.shared.json
